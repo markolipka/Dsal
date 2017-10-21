@@ -1,18 +1,12 @@
 ### D_Sal calculation from T, Sal, D0 and D35 using Literature Data from Boudreau and Schulz & Zabel
 require("ggplot2")
 
-## platform selection:
-switch(Sys.info()[['sysname']],
- Windows = {dropbox.directory <- "D:/IOW/Dropbox/"},
- Linux   = {dropbox.directory <- "~/Dropbox/"},
- Darwin  = {dropbox.directory <- "/Users/marko/Dropbox/"})
-
 ## Working directory and constants for biogeochemical models REC and PROFILE:
 #setwd(paste(dropbox.directory, "IOW/SECOS/Modeling/INPUT-Files/", sep="")) # interim location to save generated input files (to be copied manually into the models input directory)
 
 # reading list of constants for later calculations of diffusion coefficients
-Boudreau.m   <- read.csv (file=paste (dropbox.directory, "/IOW/SECOS/Modeling/Boudreau97_linregcoef_D0.csv", sep=""), sep=";", dec=".", header=TRUE, stringsAsFactors=FALSE, comment.char = "#")  # D0 per T and element Table
-Schulz.Zabel <- read.csv (file=paste (dropbox.directory, "/IOW/SECOS/Modeling/SchulzZabel_D35.csv",          sep=""), sep=";", dec=".", header=TRUE, stringsAsFactors = FALSE)  # D35 per T and element Table
+Boudreau.m   <- read.csv (file="Boudreau97_linregcoef_D0.csv", sep=";", dec=".", header=TRUE, stringsAsFactors=FALSE, comment.char = "#")  # D0 per T and element Table
+Schulz.Zabel <- read.csv (file="SchulzZabel_D35.csv", sep=";", dec=".", header=TRUE, stringsAsFactors = FALSE)  # D35 per T and element Table
 
 calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
         #if(salinity>35){salinity <- 35.0} ## clipping of Sal > 35 to prevent extrapolation Dsal calculation (3rd step)
