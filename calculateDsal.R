@@ -1,14 +1,9 @@
 ### D_Sal calculation from T, Sal, D0 and D35 using Literature Data from Boudreau and Schulz & Zabel
 require("ggplot2")
 
-## platform selection:
-switch(Sys.info()[['sysname']],
-       Windows = {dropbox.directory <- "D:/IOW/Dropbox/"},
-       Linux   = {dropbox.directory <- "~/Dropbox/"},
-       Darwin  = {dropbox.directory <- "/Users/marko/Dropbox/"})
 # reading list of constants for later calculations of diffusion coefficients
-Boudreau.m   <- read.csv (file="Boudreau97_linregcoef_D0.csv", sep=";", dec=".", header=TRUE, stringsAsFactors = FALSE, comment.char = "#")  # D0 per T and element Table
-Schulz.Zabel <- read.csv (file="SchulzZabel_D35.csv",          sep=";", dec=".", header=TRUE, stringsAsFactors = FALSE)  # D35 per T and element Table
+Boudreau.m   <- read.csv (file="Boudreau97_linregcoef_D0.csv", sep=",", dec=".", header=TRUE, stringsAsFactors = FALSE, comment.char = "#")  # D0 per T and element Table
+Schulz.Zabel <- read.csv (file="SchulzZabel_D35.csv",          sep=",", dec=".", header=TRUE, stringsAsFactors = FALSE)  # D35 per T and element Table
 
 calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
   #if(salinity>35){salinity <- 35.0} ## clipping of Sal > 35 to prevent extrapolation Dsal calculation (3rd step)
@@ -57,7 +52,8 @@ calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
     ggtitle("Dsal calculation (lin. regr.: D0, D35)") +
     geom_hline(yintercept=Dsal, linetype="dashed") +
     geom_vline(xintercept=salinity, linetype="dashed") +
-    annotate(geom="text", x=15, y=Dsal, label=paste("Dsal =", format(Dsal, digits=4)), vjust=-.5, size=3.5)
+    annotate(geom="text", x=15, y=Dsal, label=paste("Dsal =", format(Dsal, digits=4)),
+             vjust=1.2, hjust = "inward", size=3.5)
   
   return( list( Dsal = as.numeric(Dsal),
                 t  = temperature,
