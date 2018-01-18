@@ -1,0 +1,45 @@
+---
+title: "Calculate diffusion coefficients of sea water solutes"
+author: "Marko Lipka"
+date: "1/18/2018"
+output: github_document
+bibliography: library.bib
+nocite: | 
+  @Schulz2006, @Boudreau1997
+---
+
+The diffusivity $D_w$ of solutes in free water can be linearly interpolated from [temperature dependent theoretical values in de-ionized water](https://www.springer.com/de/book/9783540321439) and in [sea water](https://books.google.de/books/about/Diagenetic_models_and_their_implementati.html?id=kr0SAQAAIAAJ&redir_esc=y) for measured *in-situ* salinity and temperature.
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = F, message = F)
+
+source("calculateDsal.R")
+```
+
+*calculate.Dsal(el, temperature, salinity)* returns the diffusion coefficient of dissolved species *el*  
+ + Ca^2+^ ("Ca"),  
+ + Mg^+^ ("Mg"),  
+ + Na^+^ ("Na"),  
+ + K^+^ ("K"),  
+ + SO~4~^2-^ ("SO4"),  
+ + Ba^2+^ ("Ba"),  
+ + Fe^2+^ ("Fe"),  
+ + Li^+^ ("Li"),  
+ + Mn^2+^ ("Mn"),  
+ + PO~4~^3-^ ("PO4"),  
+ + HPO~4~^2-^ ("HPO4"),  
+ + Sr^2+^ ("Sr"),  
+ + H~2~S ("H2S"),  
+ + HS^-^ ("HS"),  
+ + HCO~3~^- ("HCO3"),  
+ + H~4~SiO~4~ ("H4SiO4"),  
+ + NH~4~ ("NH4"),  
+ + NO~3~^-^ ("NO3"),  
+ + CH~4~ ("CH4")  
+ at a given *temperature* (in °C) and *salinity*.
+ 
+```{r}
+calculate.Dsal()
+```
+ 
+ 
