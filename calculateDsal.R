@@ -9,8 +9,8 @@ Boudreau.m   <- read.csv (file="Boudreau97_linregcoef_D0.csv", sep=",", dec=".",
 Schulz.Zabel <- read.csv (file="SchulzZabel_D35.csv",          sep=",", dec=".", header=TRUE, stringsAsFactors = FALSE)  # D35 per T and element Table
 
 calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
-        if(salinity > 35){warning("Calculations are only valid for salinity values between 0 and 35")}
-        if(temperature > 25){warning("Calculations are only valid for temperature values between 0 and 25")}
+        if(salinity > 35){warning("Calculations are only valid for salinity values up to 35")}
+        if(temperature > 25 | temperature < 0){warning("Calculations are only valid for temperature values between 0 and 25 °C")}
 	# 1. Diffusion-Coef at 0psu:  D_0psu(t) = (m0+m1 * t)*10^-6 cm^2 s^-1 (Boudreau 1997)
             m0 <- Boudreau.m[Boudreau.m$X=="m0", el]
             m1 <- Boudreau.m[Boudreau.m$X=="m1", el]
