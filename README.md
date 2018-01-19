@@ -3,66 +3,56 @@ Calculate diffusion coefficients of sea water solutes
 Marko Lipka
 1/18/2018
 
-The diffusivity *D*<sub>*w*</sub> of solutes in free water can be linearly interpolated from [temperature dependent theoretical values in de-ionized water](https://www.springer.com/de/book/9783540321439) and in [sea water](https://books.google.de/books/about/Diagenetic_models_and_their_implementati.html?id=kr0SAQAAIAAJ&redir_esc=y) for measured *in-situ* salinity and temperature.
+The diffusivity *D* of solutes in sea water depends on temperature and salnity. It can be linearly interpolated from [temperature dependent theoretical values in de-ionized water](https://www.springer.com/de/book/9783540321439) and in [sea water](https://books.google.de/books/about/Diagenetic_models_and_their_implementati.html?id=kr0SAQAAIAAJ&redir_esc=y) for measured *in-situ* salinity and temperature.
 
-*calculate.Dsal(el, temperature, salinity)* returns the diffusion coefficient of dissolved species *el*
-+ Ca<sup>2+</sup> ("Ca"),
-+ Mg<sup>+</sup> ("Mg"),
-+ Na<sup>+</sup> ("Na"),
-+ K<sup>+</sup> ("K"),
-+ SO<sub>4</sub><sup>2-</sup> ("SO4"),
-+ Ba<sup>2+</sup> ("Ba"),
-+ Fe<sup>2+</sup> ("Fe"),
-+ Li<sup>+</sup> ("Li"),
-+ Mn<sup>2+</sup> ("Mn"),
-+ PO<sub>4</sub><sup>3-</sup> ("PO4"),
-+ HPO<sub>4</sub><sup>2-</sup> ("HPO4"),
-+ Sr<sup>2+</sup> ("Sr"),
-+ H<sub>2</sub>S ("H2S"),
-+ HS<sup>-</sup> ("HS"),
-+ HCO<sub>3</sub>^- ("HCO3"),
-+ H<sub>4</sub>SiO<sub>4</sub> ("H4SiO4"),
-+ NH<sub>4</sub> ("NH4"),
-+ NO<sub>3</sub><sup>-</sup> ("NO3"),
-+ CH<sub>4</sub> ("CH4")
-at a given *temperature* (in °C) and *salinity*.
+Diffusivity calculation
+-----------------------
 
-    ## $Dsal
-    ## [1] 3.743333e-06
-    ## 
-    ## $t
-    ## [1] 5
-    ## 
-    ## $sal
-    ## [1] 35
-    ## 
-    ## $m0
-    ## [1] 3.18
-    ## 
-    ## $m1
-    ## [1] 0.155
-    ## 
-    ## $D0
-    ## [1] 3.955e-06
-    ## 
-    ## $D35
-    ## [1] 3.743333e-06
-    ## 
-    ## $plot.D0
+*calculate.Dsal(el, temperature, salinity)* calculates for given *temperature* (in °C) and *salinity* the diffusion coefficient of a dissolved species *el*, which can be one of the following:
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-1.png)
+| Solute                        | *el*  |     | Solute                         | *el*   |
+|:------------------------------|:------|-----|:-------------------------------|:-------|
+| *Ca<sup>2+</sup>*             | "Ca"  |     | *PO<sub>4</sub><sup>3-</sup>*  | "PO4"  |
+| *Mg<sup>+</sup>*              | "Mg"  |     | *HPO<sub>4</sub><sup>2-</sup>* | "HPO4" |
+| *Na<sup>+</sup>*              | "Na"  |     | *Sr<sup>2+</sup>*              | "Sr"   |
+| *K<sup>+</sup>*               | "K"   |     | *H<sub>2</sub>S*               | "H2S"  |
+| *SO<sub>4</sub><sup>2-</sup>* | "SO4" |     | *HS<sup>-</sup>*               | "HS"   |
+| *Ba<sup>2+</sup>*             | "Ba"  |     | *HCO<sub>3</sub><sup>-</sup>*  | "HCO3" |
+| *Fe<sup>2+</sup>*             | "Fe"  |     | *NH<sub>4</sub>*               | "NH4"  |
+| *Li<sup>+</sup>*              | "Li"  |     | *NO<sub>3</sub><sup>-</sup>*   | "NO3"  |
+| *Mn<sup>2+</sup>*             | "Mn"  |     | *CH<sub>4</sub>*               | "CH4"  |
 
-    ## 
-    ## $plot.D35
+The function returns a list of parameters
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-2.png)
+    ##  [1] "Dsal"      "t"         "sal"       "m0"        "m1"       
+    ##  [6] "D0"        "D35"       "plot.D0"   "plot.D35"  "plot.Dsal"
 
-    ## 
-    ## $plot.Dsal
+-   The input salinity (*sal*) and temperature (*t*) values.
+-   Linear model coefficients *m0* and *m1* and calculated diffusivity *D<sub>0</sub>* at 0 salinity:
+    *D<sub>0</sub>(T) = (m0 + m1 \* T) \* 10<sup>-6</sup> cm<sup>2</sup> s^-1* (Boudreau 1997).
+-   Interpolated diffusivity *D<sub>35</sub>* at a salinity of 35 from a temperature-diffusivity relation in the literature (Schulz 2006).
+-   Calculated diffusivity *D<sub>sal</sub>* at the given salinity, linearly interpolated from *D<sub>0</sub>* and *D<sub>35</sub>*.
 
-    ## Warning in qt((1 - level)/2, df): NaNs produced
+and three plots showing the calculation of the three diffusivities (*D<sub>0</sub>*, *D<sub>35</sub>* and *D<sub>sal</sub>*) via linear interpolation.
 
-![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-3.png)
+### Example
+
+![](README_files/figure-markdown_github-ascii_identifiers/example-1.png)![](README_files/figure-markdown_github-ascii_identifiers/example-2.png)![](README_files/figure-markdown_github-ascii_identifiers/example-3.png)
+
+Salinity and temperature dependency of molecular diffusivity
+------------------------------------------------------------
+
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-2.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-3.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-4.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-5.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-6.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-7.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-8.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-9.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-10.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-11.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-12.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-13.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-14.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-15.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-16.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-17.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-18.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-19.png)![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-20.png)
+
+Correction factors for stoichometric ratio calculations
+-------------------------------------------------------
+
+For example diffusivity ratio of *H<sub>2</sub>S* / *SO<sub>4</sub><sup>2-</sup>*:
+
+![](README_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-4-1.png)
+
+References
+==========
 
 Boudreau, Bernard P. 1997. *Diagenetic models and their implementation: modelling transport and reactions in aquatic sediments*. Berlin: Springer.
 
