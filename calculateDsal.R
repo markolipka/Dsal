@@ -47,7 +47,7 @@ calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
   plot.Dsal <- qplot(x    = c(0,35), y=c(D0,D35),
                      xlab = "Sal [psu]",
                      ylab = bquote("Dsal("~.(el)~") ["~cm^2/s~"]"),
-                     geom = "smooth", method="lm") +
+                     geom = c("line", "point")) +
     theme_bw() +
     ggtitle("Dsal calculation (lin. regr.: D0, D35)") +
     geom_hline(yintercept=Dsal, linetype="dashed") +
