@@ -15,14 +15,17 @@ calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
   fun<- function(x){(m0 + m1 * x) * 1e-6}
   y <- fun(x)
   plot.D0 <- qplot(x=x, y=y,
-                   geom="line",
+                   geom   = "line",
                    xlab   ="T [°C]",
                    ylab   = bquote("D0("*.(el)*") ="~.(m1)%.%"T"+.(m0)~"["*cm^2/s*"]")) +
     theme_bw() +
     geom_hline(yintercept=D0, linetype="dashed")+
     geom_vline(xintercept=temperature, linetype="dashed") +
+      annotate(geom = "point", x = temperature, y = D0, color = "red") +
     ggtitle("D0 calculation (Boudreau et al, 1997)") +
-    annotate(geom="text", x=15, y=D0, label=paste("D0 =", format(D0, digits= 4)), vjust=1.2, size=3.5)
+    annotate(geom="text", x=temperature, y=D0,
+             label=paste("D0 =", format(D0, digits= 4)),
+             vjust=1.2, size=3.5, hjust = "inward")
   
   # 2. Diffusion-Coef at 35psu:  D_35psu(t) from literature data (Schulz und Zabel 2006)
   formula <- Schulz.Zabel[, el]~Schulz.Zabel$T
@@ -32,12 +35,16 @@ calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
   plot.D35 <- qplot(data = Schulz.Zabel, x=T, y=Schulz.Zabel[,el],
                     xlab = "T [°C]",
                     ylab = bquote("D35("~.(el)~") ["~cm^2/s~"]"),
-                    geom = "smooth", method="lm") +
+                    geom = "point") +
+      geom_smooth(method = "lm", color = "black") +
     theme_bw() +
     ggtitle("D35 calculation (Schulz and Zabel, 2006)") +
     geom_hline(yintercept=D35, linetype="dashed") +
     geom_vline(xintercept=temperature, linetype="dashed") +
-    annotate(geom="text", x=15, y=D35, label=paste("D35 =", format(D35, digits=4)), vjust=1.2, size=3.5)
+      geom_point(x = temperature, y = D35, color = "red") +
+    annotate(geom="text", x=temperature, y=D35,
+             label=paste("D35 =", format(D35, digits=4)),
+             vjust=1.2, size=3.5, hjust = "inward")
   
   
   # 3. Dif-Coef at insitu salinity: linear regression of (1) and (2): D(sal) = m * sal + D0
@@ -47,7 +54,8 @@ calculate.Dsal <- function(el="Mn", temperature=5, salinity=35){
   plot.Dsal <- qplot(x    = c(0,35), y=c(D0,D35),
                      xlab = "Sal [psu]",
                      ylab = bquote("Dsal("~.(el)~") ["~cm^2/s~"]"),
-                     geom = c("line", "point")) +
+                     geom = "line") +
+      geom_point(col="red") +
     theme_bw() +
     ggtitle("Dsal calculation (lin. regr.: D0, D35)") +
     geom_hline(yintercept=Dsal, linetype="dashed") +

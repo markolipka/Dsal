@@ -39,7 +39,7 @@ elements <- c("Ba", "Ca", "CH4", "CO2", "Fe", "H2S", "HCO3", "HPO4", "HS", "K", 
  The function returns a list of parameters
   
 ```{r, echo = F}
-res <- calculate.Dsal(el = "H2S", temperature = 10, salinity = 15)
+res <- calculate.Dsal(el = "H2S", temperature = 12, salinity = 15)
 
 names(res)
 ```
