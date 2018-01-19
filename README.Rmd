@@ -4,11 +4,9 @@ author: "Marko Lipka"
 date: "1/18/2018"
 output: github_document
 bibliography: library.bib
-nocite: | 
-  @Schulz2006, @Boudreau1997
 ---
 
-The diffusivity $D_w$ of solutes in free water can be linearly interpolated from [temperature dependent theoretical values in de-ionized water](https://www.springer.com/de/book/9783540321439) and in [sea water](https://books.google.de/books/about/Diagenetic_models_and_their_implementati.html?id=kr0SAQAAIAAJ&redir_esc=y) for measured *in-situ* salinity and temperature.
+The diffusivity $D$ of solutes in sea water depends on temperature and salnity. It can be linearly interpolated from [temperature dependent theoretical values in de-ionized water](https://www.springer.com/de/book/9783540321439) and in [sea water](https://books.google.de/books/about/Diagenetic_models_and_their_implementati.html?id=kr0SAQAAIAAJ&redir_esc=y) for measured *in-situ* salinity and temperature.
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = F, message = F)
@@ -16,30 +14,67 @@ knitr::opts_chunk$set(echo = F, message = F)
 source("calculateDsal.R")
 ```
 
-*calculate.Dsal(el, temperature, salinity)* returns the diffusion coefficient of dissolved species *el*  
- + Ca^2+^ ("Ca"),  
- + Mg^+^ ("Mg"),  
- + Na^+^ ("Na"),  
- + K^+^ ("K"),  
- + SO~4~^2-^ ("SO4"),  
- + Ba^2+^ ("Ba"),  
- + Fe^2+^ ("Fe"),  
- + Li^+^ ("Li"),  
- + Mn^2+^ ("Mn"),  
- + PO~4~^3-^ ("PO4"),  
- + HPO~4~^2-^ ("HPO4"),  
- + Sr^2+^ ("Sr"),  
- + H~2~S ("H2S"),  
- + HS^-^ ("HS"),  
- + HCO~3~^- ("HCO3"),  
- + H~4~SiO~4~ ("H4SiO4"),  
- + NH~4~ ("NH4"),  
- + NO~3~^-^ ("NO3"),  
- + CH~4~ ("CH4")  
- at a given *temperature* (in °C) and *salinity*.
+## Diffusivity calculation
+
+*calculate.Dsal(el, temperature, salinity)* calculates for given *temperature* (in °C) and *salinity* the diffusion coefficient of a dissolved species *el*, which can be one of the following:  
+
+|Solute|*el*|  |Solute|*el*|
+|:-----|:---|-----------|:-----|:---|
+| Ca^2+^ | "Ca"|    | PO~4~^3-^ | "PO4"|
+| Mg^+^ | "Mg"|     | HPO~4~^2-^ | "HPO4"|
+| Na^+^ | "Na"|     | Sr^2+^ | "Sr"|
+| K^+^ | "K"|       | H~2~S | "H2S"|
+| SO~4~^2-^ | "SO4"|| HS^-^ | "HS"|
+| Ba^2+^ | "Ba"|    | HCO~3~^-^ | "HCO3"|
+| Fe^2+^ | "Fe"|    | NH~4~ | "NH4"|
+| Li^+^ | "Li"|     | NO~3~^-^ | "NO3"|
+| Mn^2+^ | "Mn"|    | CH~4~ | "CH4"|
+
  
-```{r}
-calculate.Dsal()
+```{r, include=FALSE}
+elements <- c("Ba", "Ca", "CH4", "CO2", "Fe", "H2S", "HCO3", "HPO4", "HS", "K", "Li", "Mg", "Mn", "Na", "NH4", "NO3", "PO4", "Si", "SO4", "Sr")
 ```
  
  
+ The function returns a list of parameters
+  
+```{r, echo = F}
+res <- calculate.Dsal(el = "H2S", temperature = 10, salinity = 15)
+
+names(res)
+```
+  
+  + The input salinity (*sal*) and temperature (*t*) values.
+  + Linear model coefficients *m0* and *m1* and calculated diffusivity D~0~ at 0 salinity:  
+  D~0~(T) = (m0 + m1 * T) * 10^-6^ cm^2^ s^-1 [@Boudreau1997].
+  + Interpolated diffusivity D~35~ at a salinity of 35 from a temperature-diffusivity relation in the literature [@Schulz2006].
+  + Calculated diffusivity D~sal~ at the given salinity, linearly interpolated from D~0~ and D~35~.
+
+and three plots showing the calculation of the three diffusivities (D~0~, D~35~ and D~sal~) via linear interpolation.
+  
+### Example
+ 
+```{r example, echo = F, warning=F, fig.width=4, fig.height=3}
+res$plot.D0
+res$plot.D35
+res$plot.Dsal
+```
+ 
+## Salinity and temperature dependency of molecular diffusivity
+
+```{r, cache=TRUE, fig.width=10, fig.height=5}
+for(el in elements){
+    print(Dsal.TSdep(el))}
+```
+ 
+ 
+## Correction factors for stoichometric ratio calculations
+
+For example diffusivity ratio of H~2~S / SO~4~^2-^:
+
+```{r, cache=TRUE, fig.width=10, fig.height=5}
+Dsal.element.ratios(ely = "H2S",
+                    elx = "SO4")
+```
+
+# References
