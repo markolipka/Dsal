@@ -1,5 +1,5 @@
 context("Solute diffusivity calculation")
-source("~/Dropbox/IOW/R-functions/Dsal/calculateDsal.R")
+source("../calculateDsal.R", chdir = T)
 #auto_test(code_path = "~/Dropbox/IOW/R-functions/Dsal/", test_path = "~/Dropbox/IOW/R-functions/Dsal/tests/")
 
 test_that("calculate.Dsal() throws warning when allowed salinity and temperature range is exceeded", {

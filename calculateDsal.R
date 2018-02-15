@@ -1,5 +1,5 @@
 ### D_Sal calculation from T, Sal, D0 and D35 using Literature Data from Boudreau and Schulz & Zabel
-setwd("~/Dropbox/IOW/R-functions/Dsal")
+#setwd("~/Dropbox/IOW/R-functions/Dsal")
 require("ggplot2")
 
 # reading list of constants for later calculations of diffusion coefficients
