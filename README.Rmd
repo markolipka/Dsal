@@ -14,6 +14,13 @@ knitr::opts_chunk$set(echo = F, message = F)
 source("calculateDsal.R")
 ```
 
+```{r test}
+library(testthat)
+test_file("tests/test_Dsal.R",
+          reporter = "fail") # Stops on failed unit-test, otherwise silent
+```
+
+
 ## Diffusivity calculation
 
 *calculate.Dsal(el, temperature, salinity)* calculates for given *temperature* (in °C) and *salinity* the diffusion coefficient of a dissolved species *el*, which can be one of the following:  
